@@ -16,7 +16,8 @@ public class ControllerConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(req -> req
-				.anyRequest().authenticated());
+				.requestMatchers("/register").permitAll()
+				.requestMatchers("/api/**").authenticated());
 		http.formLogin(Customizer.withDefaults());
 		http.httpBasic(Customizer.withDefaults());
 		return http.build();

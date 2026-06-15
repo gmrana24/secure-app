@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestController
+@RequestMapping("/api")
 public class CardController {
 
 	@GetMapping("/myCard")
