@@ -1,7 +1,5 @@
 package com.project.erm.service;
 
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,14 +17,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public CustomAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+	public CustomAuthenticationProvider(final UserDetailsService userDetailsService,
+			final PasswordEncoder passwordEncoder) {
 		this.userDetailsService = userDetailsService;
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public Authentication authenticate(Authentication authentication) {
-		String username = authentication.getName(), pwd = authentication.getCredentials().toString();
-		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+	public Authentication authenticate(final Authentication authentication) {
+		final String username = authentication.getName(), pwd = authentication.getCredentials().toString();
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (passwordEncoder.matches(pwd, userDetails.getPassword()))
 			return new UsernamePasswordAuthenticationToken(username, pwd, userDetails.getAuthorities());
 		else
@@ -34,7 +33,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	}
 
-	public boolean supports(Class<?> authentication) {
+	public boolean supports(final Class<?> authentication) {
 		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 }
