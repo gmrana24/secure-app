@@ -17,15 +17,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public CustomAuthenticationProvider(final UserDetailsService userDetailsService,
-			final PasswordEncoder passwordEncoder) {
+	public CustomAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
 		this.userDetailsService = userDetailsService;
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public Authentication authenticate(final Authentication authentication) {
-		final String username = authentication.getName(), pwd = authentication.getCredentials().toString();
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+	public Authentication authenticate(Authentication authentication) {
+		String username = authentication.getName(), pwd = authentication.getCredentials().toString();
+		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		if (passwordEncoder.matches(pwd, userDetails.getPassword()))
 			return new UsernamePasswordAuthenticationToken(username, pwd, userDetails.getAuthorities());
 		else
@@ -33,7 +32,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	}
 
-	public boolean supports(final Class<?> authentication) {
+	public boolean supports(Class<?> authentication) {
 		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 }
