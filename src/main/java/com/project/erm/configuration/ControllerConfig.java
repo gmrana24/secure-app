@@ -12,6 +12,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 
+import com.project.erm.exception.CustomAccessDeniedHandler;
+import com.project.erm.exception.CustomAuthenticationEntryPoint;
+
 @Configuration
 public class ControllerConfig {
 
@@ -22,10 +25,12 @@ public class ControllerConfig {
 				.redirectToHttps(x -> x.requestMatchers(AnyRequestMatcher.INSTANCE))
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(req -> req
-						.requestMatchers("/register").permitAll()
+						.requestMatchers("/register", "/error").permitAll()
 						.requestMatchers("/api/**").authenticated());
 		http.formLogin(Customizer.withDefaults());
 		http.httpBasic(Customizer.withDefaults());
+		http.exceptionHandling(x -> x.accessDeniedHandler(new CustomAccessDeniedHandler()));
+		http.exceptionHandling(x -> x.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 		return http.build();
 	}
 
@@ -35,10 +40,12 @@ public class ControllerConfig {
 		http
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(req -> req
-						.requestMatchers("/register").permitAll()
+						.requestMatchers("/register", "/error").permitAll()
 						.requestMatchers("/api/**").authenticated());
 		http.formLogin(Customizer.withDefaults());
 		http.httpBasic(Customizer.withDefaults());
+		http.exceptionHandling(x -> x.accessDeniedHandler(new CustomAccessDeniedHandler()));
+		http.exceptionHandling(x -> x.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 		return http.build();
 	}
 
