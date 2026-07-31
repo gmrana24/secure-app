@@ -23,14 +23,17 @@ public class ControllerConfig {
 	public SecurityFilterChain filterChainProd(HttpSecurity http) throws Exception {
 		http
 				.redirectToHttps(x -> x.requestMatchers(AnyRequestMatcher.INSTANCE))
+				.sessionManagement(session -> session.maximumSessions(1).maxSessionsPreventsLogin(true))
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(req -> req
 						.requestMatchers("/register", "/error").permitAll()
 						.requestMatchers("/api/**").authenticated());
 		http.formLogin(Customizer.withDefaults());
 		http.httpBasic(Customizer.withDefaults());
-		http.exceptionHandling(x -> x.accessDeniedHandler(new CustomAccessDeniedHandler()));
-		http.exceptionHandling(x -> x.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+		// http.exceptionHandling(x -> x.accessDeniedHandler(new
+		// CustomAccessDeniedHandler()));
+		// http.exceptionHandling(x -> x.authenticationEntryPoint(new
+		// CustomAuthenticationEntryPoint()));
 		return http.build();
 	}
 
@@ -38,14 +41,18 @@ public class ControllerConfig {
 	@Profile("dev")
 	public SecurityFilterChain filterChainDev(HttpSecurity http) throws Exception {
 		http
+				.sessionManagement(session -> session.sessionFixation(fixation -> fixation.newSession()).maximumSessions(1)
+						.maxSessionsPreventsLogin(true))
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(req -> req
-						.requestMatchers("/register", "/error").permitAll()
+						.requestMatchers("/register", "/login", "/error").permitAll()
 						.requestMatchers("/api/**").authenticated());
 		http.formLogin(Customizer.withDefaults());
 		http.httpBasic(Customizer.withDefaults());
-		http.exceptionHandling(x -> x.accessDeniedHandler(new CustomAccessDeniedHandler()));
-		http.exceptionHandling(x -> x.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+		// http.exceptionHandling(exc -> exc.accessDeniedHandler(new
+		// CustomAccessDeniedHandler()));
+		// http.exceptionHandling(exc -> exc.authenticationEntryPoint(new
+		// CustomAuthenticationEntryPoint()));
 		return http.build();
 	}
 
