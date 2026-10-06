@@ -45,7 +45,7 @@ public class ControllerConfig {
 						.maxSessionsPreventsLogin(true))
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(req -> req
-						.requestMatchers("/login", "register", "/error").permitAll()
+						.requestMatchers("/login", "/register", "/error").permitAll()
 						.requestMatchers("/api/**").authenticated());
 		http.formLogin(Customizer.withDefaults());
 		http.httpBasic(Customizer.withDefaults());
